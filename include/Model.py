@@ -1,7 +1,7 @@
 import math
 
 from .Init import *
-from include.Test import get_hits
+from RDGCN_seminar_report.include.Test import get_hits
 from scipy import spatial
 import json
 
