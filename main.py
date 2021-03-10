@@ -1,4 +1,6 @@
 import tensorflow as tf
+
+# local:
 from include.Config import Config
 from include.Model import build, training
 from include.Test import get_hits
@@ -29,7 +31,8 @@ if __name__ == '__main__':
     KG2 = loadfile(Config.kg2, 3)
 
     output_layer, loss = build(
-        Config.dim, Config.act_func, Config.alpha, Config.beta, Config.gamma, Config.k, Config.language[0:2], e, train, KG1 + KG2)
+        Config.dim, Config.act_func, Config.alpha, Config.beta, Config.gamma, Config.k, Config.language[0:2],
+        e, train, KG1 + KG2)
     vec, J = training(output_layer, loss, 0.001,
                       Config.epochs, train, e, Config.k, test)
     print('loss:', J)

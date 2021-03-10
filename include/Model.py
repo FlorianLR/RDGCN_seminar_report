@@ -1,9 +1,13 @@
 import math
 
 from .Init import *
-from RDGCN_seminar_report.include.Test import get_hits
 from scipy import spatial
 import json
+
+if 'google.colab' in str(get_ipython()):
+    from RDGCN_seminar_report.include.Test import get_hits
+else:
+    from include.Test import get_hits
 
 
 def rfunc(KG, e):

@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 class Config:
-	language = 'ja_en' # zh_en | ja_en | fr_en
+	language = 'ja_en' # zh_en | ja_en | fr_en | dbp_yg_15k_V1
 	e1 = 'data/' + language + '/ent_ids_1'
 	e2 = 'data/' + language + '/ent_ids_2'
 	ill = 'data/' + language + '/ref_ent_ids'
