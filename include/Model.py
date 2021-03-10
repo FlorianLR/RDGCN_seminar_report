@@ -190,9 +190,10 @@ def get_dual_input(inlayer, head, tail, head_r, tail_r, dimension):
     return dual_X, dual_A
 
 
-def get_input_layer(e, dimension, lang):
+def get_input_layer(e, dimension, lang, data_directory_prefix=''):
     print('adding the primal input layer...')
-    with open(file='data/' + lang + '_en/' + lang + '_vectorList.json', mode='r', encoding='utf-8') as f:
+    with open(file=data_directory_prefix + 'data/' + lang + '_en/' + lang + '_vectorList.json',
+              mode='r', encoding='utf-8') as f:
         embedding_list = json.load(f)
         print(len(embedding_list), 'rows,', len(embedding_list[0]), 'columns.')
     input_embeddings = tf.convert_to_tensor(embedding_list)
@@ -228,7 +229,10 @@ def get_loss(outlayer, ILL, gamma, k):
 
 def build(dimension, act_func, alpha, beta, gamma, k, lang, e, ILL, KG):
     tf.reset_default_graph()
-    primal_X_0 = get_input_layer(e, dimension, lang)
+    data_directory_prefix = ''
+    if 'google.colab' in str(get_ipython()):
+        data_directory_prefix = 'RDGCN_seminar_report/'
+    primal_X_0 = get_input_layer(e, dimension, lang, data_directory_prefix=data_directory_prefix)
     M, M_arr = get_sparse_tensor(e, KG)
     head, tail, head_r, tail_r, r_mat = rfunc(KG, e)
 

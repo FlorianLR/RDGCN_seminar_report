@@ -3,9 +3,6 @@ import numpy as np
 
 # load a file and return a list of tuple containing $num integers in each line
 def loadfile(fn, num=1):
-    ###
-    print(str(get_ipython()))
-    ###
     if 'google.colab' in str(get_ipython()):
         fn = 'RDGCN_seminar_report/' + fn
     print('loading a file...' + fn)
