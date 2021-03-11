@@ -1,11 +1,8 @@
 import numpy as np
-from IPython import get_ipython
 
 
 # load a file and return a list of tuple containing $num integers in each line
 def loadfile(fn, num=1):
-    if 'google.colab' in str(get_ipython()):
-        fn = 'RDGCN_seminar_report/' + fn
     print('loading a file...' + fn)
     ret = []
     with open(fn, encoding='utf-8') as f:

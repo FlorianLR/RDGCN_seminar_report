@@ -1,14 +1,11 @@
 import math
+from tqdm import tqdm
 
 from .Init import *
 from scipy import spatial
 import json
-from IPython import get_ipython
-
-if 'google.colab' in str(get_ipython()):
-    from RDGCN_seminar_report.include.Test import get_hits
-else:
-    from include.Test import get_hits
+from include.Test import get_hits
+from include.Logging import fresh_training_log
 
 
 def rfunc(KG, e):
@@ -191,9 +188,9 @@ def get_dual_input(inlayer, head, tail, head_r, tail_r, dimension):
     return dual_X, dual_A
 
 
-def get_input_layer(e, dimension, lang, data_directory_prefix=''):
+def get_input_layer(e, dimension, lang):
     print('adding the primal input layer...')
-    with open(file=data_directory_prefix + 'data/' + lang + '_en/' + lang + '_vectorList.json',
+    with open(file='data/' + lang + '_en/' + lang + '_vectorList.json',
               mode='r', encoding='utf-8') as f:
         embedding_list = json.load(f)
         print(len(embedding_list), 'rows,', len(embedding_list[0]), 'columns.')
@@ -230,10 +227,7 @@ def get_loss(outlayer, ILL, gamma, k):
 
 def build(dimension, act_func, alpha, beta, gamma, k, lang, e, ILL, KG):
     tf.reset_default_graph()
-    data_directory_prefix = ''
-    if 'google.colab' in str(get_ipython()):
-        data_directory_prefix = 'RDGCN_seminar_report/'
-    primal_X_0 = get_input_layer(e, dimension, lang, data_directory_prefix=data_directory_prefix)
+    primal_X_0 = get_input_layer(e, dimension, lang)
     M, M_arr = get_sparse_tensor(e, KG)
     head, tail, head_r, tail_r, r_mat = rfunc(KG, e)
 
@@ -282,7 +276,11 @@ def get_neg(ILL, output_layer, k):
     return neg
 
 
-def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test):
+def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, log_training=True):
+    if log_training:
+        train_log_filename = fresh_training_log()
+    else:
+        train_log_filename = None
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss)
     print('initializing...')
     init = tf.global_variables_initializer()
@@ -296,7 +294,7 @@ def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test):
     neg_left = L.reshape((t * k,))
     L = np.ones((t, k)) * (ILL[:, 1].reshape((t, 1)))
     neg2_right = L.reshape((t * k,))
-    for i in range(epochs):
+    for i in tqdm(range(epochs)):
         if i % 10 == 0:
             out = sess.run(output_layer)
             neg2_left = get_neg(ILL[:, 1], out, k)
@@ -310,7 +308,7 @@ def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test):
         if i % 10 == 0:
             th, outvec = sess.run([loss, output_layer], feed_dict=feeddict)
             J.append(th)
-            get_hits(outvec, test)
+            get_hits(outvec, test, log_training=log_training, train_log_filename=train_log_filename, th=th)
 
         print('%d/%d' % (i + 1, epochs), 'epochs...', th)
     outvec = sess.run(output_layer)
