@@ -3,6 +3,7 @@ import math
 from .Init import *
 from scipy import spatial
 import json
+from IPython import get_ipython
 
 if 'google.colab' in str(get_ipython()):
     from RDGCN_seminar_report.include.Test import get_hits

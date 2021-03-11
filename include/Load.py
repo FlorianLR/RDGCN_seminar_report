@@ -1,4 +1,5 @@
 import numpy as np
+from IPython import get_ipython
 
 
 # load a file and return a list of tuple containing $num integers in each line

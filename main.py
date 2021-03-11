@@ -1,13 +1,12 @@
 import tensorflow as tf
+import warnings
+warnings.filterwarnings("ignore")
 
 # local:
 from include.Config import Config
 from include.Model import build, training
 from include.Test import get_hits
 from include.Load import *
-
-import warnings
-warnings.filterwarnings("ignore")
 
 '''
 Follow the code style of GCN-Align:
