@@ -24,9 +24,9 @@ def get_hits(vec, test_pair, top_k=(1, 10, 50, 100), verbose=True, log_training=
                 top_rl[j] += 1
     # If applicable, log the scores:
     if log_training:
-        lr_dict = {'left_Hits@' + str(top_k[idx]): [top_lr[idx] / (len(test_pair) * 100)]
+        lr_dict = {'left_Hits@' + str(top_k[idx]): [top_lr[idx] / len(test_pair)]
                    for idx in range(0, len(top_k))}
-        rl_dict = {'right_Hits@' + str(top_k[idx]): [top_rl[idx] / (len(test_pair) * 100)]
+        rl_dict = {'right_Hits@' + str(top_k[idx]): [top_rl[idx] / len(test_pair)]
                    for idx in range(0, len(top_k))}
         pd.DataFrame({**lr_dict, **rl_dict, **{'loss': [th]}}).to_csv(
             os.path.join('./logging/', train_log_filename), mode='a', index=False, sep='|', header=False)
