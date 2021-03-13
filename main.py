@@ -45,7 +45,8 @@ if __name__ == '__main__':
         Config.dim, Config.act_func, Config.alpha, Config.beta, Config.gamma, Config.k, config_obj.language[0:2],
         e, train, KG1 + KG2)
 
-    vec, J = training(output_layer, loss, 0.001, config_obj.epochs, train, e, Config.k, test)
+    vec, J = training(output_layer, loss, 0.001, config_obj.epochs, train, e, Config.k, test,
+                      language=config_obj.language)
     print('loss:', J)
     print('Result:')
     get_hits(vec, test)

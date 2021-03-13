@@ -5,14 +5,22 @@ from datetime import datetime
 import pandas as pd
 
 
-def fresh_training_log() -> str:
+def fresh_training_log(language: str) -> str:
     """Create an empty log file to log the training details. Save the file in folder 'logging'. \
     Limitation: Measures are assumed to be Hits@1, Hits@10, Hits@50 and Hits@100.
 
+    :param language: String indicating the dataset. Accepted: "'ja_en', 'zh_en', 'ja_en', 'fr_en', 'dpb_yg'."
+
     :return: Training file name.
     """
+    # Assert the validity of the language parameter:
+    if not language in ['fr_en', 'ja_en', 'zh_en', 'dbp_yg']:
+        raise ValueError('Entered invalid language value of "' + language + '". Accepted: '
+                         + "'fr_en', 'ja_en', 'zh_en' and 'dbp_yg'")
+
+    # Create a fresh log file:
     now_string = datetime.strftime(datetime.now(tz=None), "%Y_%m_%d_%H.%M.%S")
-    train_log_filename = 'training_log_' + now_string + '.csv'
+    train_log_filename = language + '_' + 'training_log_' + now_string + '.csv'
     pd.DataFrame({'left_Hits@1': [],
                   'left_Hits@10': [],
                   'left_Hits@50': [],
