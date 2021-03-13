@@ -308,7 +308,7 @@ def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, log_tra
         if i % 10 == 0:
             th, outvec = sess.run([loss, output_layer], feed_dict=feeddict)
             J.append(th)
-            get_hits(outvec, test, log_training=log_training, train_log_filename=train_log_filename, th=th)
+            get_hits(outvec, test, train_log_filename=train_log_filename, th=th)
 
         print('%d/%d' % (i + 1, epochs), 'epochs...', th)
     outvec = sess.run(output_layer)
