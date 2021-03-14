@@ -278,7 +278,7 @@ def get_neg(ILL, output_layer, k):
 
 def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, language, log_training=True):
     if log_training:
-        train_log_filename = fresh_training_log(language=language)
+        train_log_filename = fresh_training_log(dataset=language)
     else:
         train_log_filename = None
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss)
