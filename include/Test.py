@@ -4,7 +4,7 @@ import pandas as pd
 import scipy
 
 
-def get_hits(vec, test_pair, top_k=(1, 10, 50, 100), verbose=True, train_log_filename=None, th=None):
+def get_hits(vec, test_pair, top_k=(1, 10, 50, 100), verbose=True, log_filename=None, th=None):
     Lvec = np.array([vec[e1] for e1, e2 in test_pair])
     Rvec = np.array([vec[e2] for e1, e2 in test_pair])
     sim = scipy.spatial.distance.cdist(Lvec, Rvec, metric='cityblock')
@@ -23,13 +23,13 @@ def get_hits(vec, test_pair, top_k=(1, 10, 50, 100), verbose=True, train_log_fil
             if rank_index < top_k[j]:
                 top_rl[j] += 1
     # If applicable, log the scores:
-    if train_log_filename:
+    if log_filename:
         lr_dict = {'left_Hits@' + str(top_k[idx]): [top_lr[idx] / len(test_pair)]
                    for idx in range(0, len(top_k))}
         rl_dict = {'right_Hits@' + str(top_k[idx]): [top_rl[idx] / len(test_pair)]
                    for idx in range(0, len(top_k))}
         pd.DataFrame({**lr_dict, **rl_dict, **{'loss': [th]}}).to_csv(
-            os.path.join('./logging/', train_log_filename), mode='a', index=False, sep='|', header=False)
+            os.path.join('./logging/', log_filename), mode='a', index=False, sep='|', header=False)
     # If applicable, display the scores:
     if verbose:
         print('For each left:')

@@ -5,7 +5,6 @@ from .Init import *
 from scipy import spatial
 import json
 from include.Test import get_hits
-from include.Logging import fresh_training_log
 
 
 def rfunc(KG, e):
@@ -188,9 +187,9 @@ def get_dual_input(inlayer, head, tail, head_r, tail_r, dimension):
     return dual_X, dual_A
 
 
-def get_input_layer(e, dimension, lang):
+def get_input_layer(e, dimension, dataset):
     print('adding the primal input layer...')
-    with open(file='data/' + lang + '_en/' + lang + '_vectorList.json',
+    with open(file='data/' + dataset + '/' + dataset.split('_', 1)[0] + '_vectorList.json',
               mode='r', encoding='utf-8') as f:
         embedding_list = json.load(f)
         print(len(embedding_list), 'rows,', len(embedding_list[0]), 'columns.')
@@ -225,9 +224,9 @@ def get_loss(outlayer, ILL, gamma, k):
     return (tf.reduce_sum(L1) + tf.reduce_sum(L2)) / (2.0 * k * t)
 
 
-def build(dimension, act_func, alpha, beta, gamma, k, lang, e, ILL, KG):
+def build(dimension, act_func, alpha, beta, gamma, k, dataset, e, ILL, KG):
     tf.reset_default_graph()
-    primal_X_0 = get_input_layer(e, dimension, lang)
+    primal_X_0 = get_input_layer(e, dimension, dataset)
     M, M_arr = get_sparse_tensor(e, KG)
     head, tail, head_r, tail_r, r_mat = rfunc(KG, e)
 
@@ -276,11 +275,8 @@ def get_neg(ILL, output_layer, k):
     return neg
 
 
-def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, language, log_training=True):
-    if log_training:
-        train_log_filename = fresh_training_log(dataset=language)
-    else:
-        train_log_filename = None
+def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, language, time_str: str,
+             train_log_filename: str):
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss)
     print('initializing...')
     init = tf.global_variables_initializer()
@@ -308,7 +304,7 @@ def training(output_layer, loss, learning_rate, epochs, ILL, e, k, test, languag
         if i % 10 == 0:
             th, outvec = sess.run([loss, output_layer], feed_dict=feeddict)
             J.append(th)
-            get_hits(outvec, test, train_log_filename=train_log_filename, th=th)
+            get_hits(outvec, test, log_filename=train_log_filename, th=th)
 
         print('%d/%d' % (i + 1, epochs), 'epochs...', th)
     outvec = sess.run(output_layer)
