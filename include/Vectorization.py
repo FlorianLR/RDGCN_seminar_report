@@ -113,7 +113,7 @@ def __store_embedding(dataset: str, embedding_dict: dict):
     """
     ent_ls_1 = __apply_embedding(dataset=dataset, embedding_dict=embedding_dict, graph_num=1)
     ent_ls_2 = __apply_embedding(dataset=dataset, embedding_dict=embedding_dict, graph_num=2)
-    vec_ls = ent_ls_2 + ent_ls_1
+    vec_ls = ent_ls_1 + ent_ls_2
     vec_ls = [vec.tolist() for vec in vec_ls]
     with open(file='data/' + dataset + '/' + dataset.split('_', 1)[0] + '_vectorList.json',
               mode='w',
