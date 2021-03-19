@@ -46,8 +46,9 @@ To replicate the results on one of the datasets, run the following command with 
 python main.py --language=fr_en
 ``
 
-###1.2 Application on the SRSPRS dataset:
-Application on any dataset works the same. Run the following command (with the dataset specified as language):
+###1.2 Application on the SRPRS dataset:
+Application on any dataset works the same. After generating the embedding file for the SRPRS dataset (point 0.4), \
+run the following command (with the dataset specified as language):
 
 ``
 python main.py --language=dbp_yg
